@@ -17,7 +17,6 @@ public class SimpleSlickGame extends BasicGame {
 	public int countdown, timer;
 	Image superStarshipDeluxe, pewmodetitle, pressanykey, flame, star1, star2, flameAB;
 	boolean menumode = true;
-	int toggleflame = 0;
 	float scalemodifier = 1;
 	Input in = new Input(1080);
 	int shipMaxSpeed = 8;
@@ -69,15 +68,15 @@ public class SimpleSlickGame extends BasicGame {
 		Star.updateStars();
 		scalemodifier = (float) (1+Math.sin(System.nanoTime())/10);
 		
-		if(toggleflame > 0) {
+		if(flame.getAlpha() > 0f)
+			setFlameAlpha(0f);
+		else
 			setFlameAlpha(0.8f);
-			if (toggleflame > 1) {
-				setFlameAlpha(0f);
-				toggleflame = 0;
-			}
-		}
-		toggleflame++;
 		
+		updateMovement();
+	}
+
+	private void updateMovement() {
 		// down
 		if (in.isKeyDown(Input.KEY_S)) {
 			this.blahy += shipMaxSpeed;
@@ -97,7 +96,7 @@ public class SimpleSlickGame extends BasicGame {
 		if (in.isKeyDown(Input.KEY_D)) {
 			this.blahx += shipMaxSpeed;
 			Star.move(-0.5, 0);
-		}
+		}		
 	}
 
 	private void setFlameAlpha(float a) {
@@ -120,7 +119,7 @@ public class SimpleSlickGame extends BasicGame {
 		
 		superStarshipDeluxe.draw(blahx, blahy, scale);
 				
-		//renderFlameGroup(190); renderFlameGroup(300);  // The flames below the ship
+		renderFlameGroup(190); renderFlameGroup(300);  // The flames below the ship
 		renderAfterBurner();
 	}
 
@@ -159,14 +158,10 @@ public class SimpleSlickGame extends BasicGame {
 			blahx+=2;
 		} 
 		else {
-			if(toggleflame > 0) {
-				flame.setAlpha(0.8f);
-				if (toggleflame > 1) {
-					flame.setAlpha(0f);
-					toggleflame = 0;
-				}
-			}
-			toggleflame++;				
+			if(flame.getAlpha() > 0f)
+				setFlameAlpha(0f);
+			else
+				setFlameAlpha(0.8f);				
 		}	
 		
 		if(570 + blahy < 1080) {
@@ -202,4 +197,5 @@ public class SimpleSlickGame extends BasicGame {
 			Logger.getLogger(SimpleSlickGame.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
+}
 }
