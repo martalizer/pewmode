@@ -69,14 +69,33 @@ public class SimpleSlickGame extends BasicGame {
 		Star.updateStars();
 		scalemodifier = (float) (1+Math.sin(System.nanoTime())/10);
 		
-		if(toggleflame > 0) {
+		if(flame.getAlpha() == 0.8f)
+			setFlameAlpha(0f);
+		else
+			setFlameAlpha(0.8f);
+				
+		
+		
+		/*if(toggleflame > 0) {
 			setFlameAlpha(0.8f);
 			if (toggleflame > 1) {
 				setFlameAlpha(0f);
 				toggleflame = 0;
 			}
-		}
+		//}
 		toggleflame++;
+		*/
+		
+		/*
+		if (toggleflame > 1) {
+			setFlameAlpha(0f);
+			toggleflame = 1;
+		} 
+		else {
+			setFlameAlpha(0f);
+			toggleflame++;
+		}
+		*/
 		
 		// down
 		if (in.isKeyDown(Input.KEY_S)) {
@@ -120,7 +139,7 @@ public class SimpleSlickGame extends BasicGame {
 		
 		superStarshipDeluxe.draw(blahx, blahy, scale);
 				
-		//renderFlameGroup(190); renderFlameGroup(300);  // The flames below the ship
+		renderFlameGroup(190); renderFlameGroup(300);  // The flames below the ship
 		renderAfterBurner();
 	}
 
