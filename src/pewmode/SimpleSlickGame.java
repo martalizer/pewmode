@@ -15,12 +15,13 @@ import org.newdawn.slick.SlickException;
 public class SimpleSlickGame extends BasicGame {
 	public float blahx, blahy, scale, fade;
 	public int countdown, timer;
-	Image superStarshipDeluxe, pewmodetitle, pressanykey, flame, star1, star2, flameAB;
+	Image superStarshipDeluxe, pewmodetitle, pressanykey, flame, flameAB;
 	boolean menumode = true;
 	float scalemodifier = 1;
 	Input in = new Input(1080);
 	int shipMaxSpeed = 8;
-	
+	private long lastShotFired;
+
 	public SimpleSlickGame(String gamename)	{
 		super(gamename);
 	}
@@ -64,11 +65,12 @@ public class SimpleSlickGame extends BasicGame {
 			updateGame();
 	}
 
-	private void updateGame() {
+	private void updateGame() throws SlickException {
 		Star.updateStars();
+		Fire.updateFires();
 		scalemodifier = (float) (1+Math.sin(System.nanoTime())/10);
 		
-		if(flame.getAlpha() == 0.8f)
+		if(flame.getAlpha() > 0f)
 			setFlameAlpha(0f);
 		else
 			setFlameAlpha(0.8f);
@@ -76,27 +78,45 @@ public class SimpleSlickGame extends BasicGame {
 		updateMovement();
 	}
 
-	private void updateMovement() {
-		// down
+	private void updateMovement() throws SlickException {
 		if (in.isKeyDown(Input.KEY_S)) {
-			this.blahy += shipMaxSpeed;
-			Star.move(0, -0.5);
+			down();
 		}
-		// up
 		if (in.isKeyDown(Input.KEY_W)) {
-			this.blahy -= shipMaxSpeed;
-			Star.move(0, 0.5);
+			up();
 		}
-		// left
 		if (in.isKeyDown(Input.KEY_A)) {
-			this.blahx -= shipMaxSpeed;
-			Star.move(0.5, 0);
+			left();
 		}
-		// right
 		if (in.isKeyDown(Input.KEY_D)) {
-			this.blahx += shipMaxSpeed;
-			Star.move(-0.5, 0);
-		}		
+			right();
+		}
+		if (in.isKeyDown(Input.KEY_SPACE)) {
+			if (System.currentTimeMillis() > lastShotFired + 50) {
+				Fire.initFire(blahx, blahy);
+				lastShotFired = System.currentTimeMillis();
+			}
+		}
+	}
+
+	private void down() {
+		this.blahy += shipMaxSpeed;
+		Star.move(0, -0.5);
+	}
+
+	private void up() {
+		this.blahy -= shipMaxSpeed;
+		Star.move(0, 0.5);
+	}
+
+	private void left() {
+		this.blahx -= shipMaxSpeed;
+		Star.move(0.5, 0);
+	}
+
+	private void right() {
+		this.blahx += shipMaxSpeed;
+		Star.move(-0.5, 0);
 	}
 
 	private void setFlameAlpha(float a) {
@@ -116,6 +136,7 @@ public class SimpleSlickGame extends BasicGame {
 		superStarshipDeluxe.setAlpha(1);
 		scale = 0.3f;
 		Star.renderStars();
+		Fire.renderFire();
 		
 		superStarshipDeluxe.draw(blahx, blahy, scale);
 				
@@ -123,17 +144,18 @@ public class SimpleSlickGame extends BasicGame {
 		renderAfterBurner();
 	}
 
-	private void renderAfterBurner() {
-		flameAB.draw(blahx-150*scale-((scale*scalemodifier-2)*10), blahy-70-((scale*scalemodifier-2)*60), scale*5*scalemodifier);
-	}
-
 	private void renderMenu() {
 		Star.renderStars();
+		Fire.renderFire();
 		superStarshipDeluxe.draw(blahx, blahy, scale);
 		renderFlameGroup(247);
 		renderFlameGroup(357);
 		pressanykey.draw(500, 500, 1);
 		pewmodetitle.draw(60, 100, 4.3f);
+	}
+
+	private void renderAfterBurner() {
+		flameAB.draw(blahx-150*scale-((scale*scalemodifier-2)*10), blahy-70-((scale*scalemodifier-2)*60), scale*5*scalemodifier);
 	}
 
 	private void renderFlameGroup(int offset) {
@@ -154,11 +176,11 @@ public class SimpleSlickGame extends BasicGame {
 		superStarshipDeluxe.setAlpha((float) (superStarshipDeluxe.getAlpha()+0.004));
 		
 		if(superStarshipDeluxe.getAlpha() < 1f) {
-			scale = (float) blahx*blahy/60000.00f;
+			scale = blahx*blahy/60000.00f;
 			blahx+=2;
 		} 
 		else {
-			if(flame.getAlpha() == 0.8f)
+			if(flame.getAlpha() > 0f)
 				setFlameAlpha(0f);
 			else
 				setFlameAlpha(0.8f);				
@@ -190,6 +212,7 @@ public class SimpleSlickGame extends BasicGame {
 			appgc.setDisplayMode(1920, 1080, false);
 			appgc.setFullscreen(false);
 			appgc.setShowFPS(false);
+			appgc.setTargetFrameRate(60);
 			appgc.setVSync(true);
 			appgc.start();
 		}

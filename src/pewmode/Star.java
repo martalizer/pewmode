@@ -72,8 +72,5 @@ public class Star {
 			s.xPos+=s.speed*x;
 			s.yPos+=s.speed*y;
 		}
-		
 	}
-
-	
 }
