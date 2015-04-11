@@ -7,47 +7,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Created by mart on 13/03/15.
- */
 public class Fire {
     static Random rng = new Random();
     private Image image;
-    float xPos;
-    float yPos;
-    float speed;
-    float yspeed;
-    float targetspeed;
-    float scale;
-    float alpha;
+    float xPos, yPos, speed, yspeed, targetspeed, scale, alpha;
     boolean creationDone;
     static List<Fire> fires = new ArrayList<>();
     private static final float TARGET_SCALE = 0.6f;
-    int rotationFactor;
+    float rotationFactor;
 
-    public Fire(float blahx, float blahy) throws SlickException {
-        image = new Image("fireball.png");
-        xPos = blahx+220;
-        yPos = blahy-240;
-        scale = 0.3f/10;
-        targetspeed = 32;
-        speed = targetspeed/4;
-        image.rotate(-45);
-        alpha = 0;
-        creationDone = false;
-        rotationFactor = 0;
-        //rotationFactor = rng.nextInt(4)-2;
-        yspeed = rng.nextInt(10)-5;
+    public Fire(float shipXpos, float shipYpos) throws SlickException {
+        this.image = new Image("fireball.png");
+        this.xPos = shipXpos + 220;
+        this.yPos = shipYpos - 240;
+        this.scale = 0.3f / 10;
+        this.targetspeed = 32;
+        this.speed = this.targetspeed / 4;
+        this.image.rotate(-45);
+        this.alpha = 0;
+        this.creationDone = false;
+        this.rotationFactor = 0;
+        //this.rotationFactor = rng.nextInt(4)-2;
+        this.yspeed = (rng.nextFloat()*10f) - 5f;
     }
 
     public static void renderFire() {
-        for(Fire f : fires) {
+        for (Fire f : fires) {
             f.draw();
         }
     }
 
     public static void updateFires() {
-        for(Fire f : fires) {
+        for (Fire f : fires) {
             f.update();
         }
     }
@@ -71,8 +62,8 @@ public class Fire {
         }
 
         xPos += speed;
-        yPos += yspeed*speed/10;
-        rotationFactor = (int)yspeed/3;
+        yPos += yspeed * speed / 10;
+        rotationFactor = yspeed / 6f;
     }
 
     public void draw() {

@@ -7,70 +7,68 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Star {
-	private Image image;
-	float xPos;
-	float yPos;
-	float speed;
-	float scale;
-	static List<Star> stars = new ArrayList<>();
-		
-	public Star(Image star1) {
-		reset(); 
-		this.xPos = -10 + (float) (Math.random()*2010);
-		image = star1;
-	}
+    private Image image;
+    float xPos, yPos, speed, scale;
+    static List<Star> stars = new ArrayList<>();
 
-	private void reset() {
-		this.yPos = (float) (Math.random()*1080);
-		xPos = 2000;
-		speed = 2 + (float) (Math.random())*2;
-		scale = speed/4;
-	}
-	
-	public void draw() {
-		image.draw(xPos, yPos, scale);
-	}
-	
-	public void update() {
-		xPos -= speed;
-		if(xPos < -10)
-			reset();
-		if(yPos < -10)
-			yPos = 1080;
-		if(yPos > 1090)
-			yPos = 0;
-	}
-	
-	public static void initStars(int nbrOfStars) throws SlickException {
-		Image star1 = new Image("star1.png");
-		Image star2 = new Image("star2.png");
-		
-		for (int n = 0; n < nbrOfStars/2; n++)
-			stars.add(new Star(star1));
-		for (int n = 0; n < nbrOfStars/2; n++)
-			stars.add(new Star(star2));
-	}
+    public Star(Image image) {
+        initStar();
+        this.image = image;
+    }
 
-	public static List<Star> getStars() {
-		return stars;
-	}
+    private void initStar() {
+        this.yPos = (float) (Math.random() * 1080);
+        this.xPos = -10 + (float) (Math.random() * 2010);
+        this.speed = 2 + (float) (Math.random()) * 2;
+        this.scale = this.speed / 4;
+    }
 
-	public static void renderStars() {
-		for(Star s : stars) {
-			s.draw();
-		}
-	}
-	
-	public static void updateStars() {
-		for(Star s : stars) {
-			s.update();
-		}	
-	}
+    private void reset() {
+        this.yPos = (float) (Math.random() * 1080);
+        xPos = 2000;
+    }
 
-	public static void move(double x, double y) {
-		for(Star s : stars) {
-			s.xPos+=s.speed*x;
-			s.yPos+=s.speed*y;
-		}
-	}
+    public void draw() {
+        image.draw(xPos, yPos, scale);
+    }
+
+    public void update() {
+        this.xPos -= this.speed;
+        if (this.xPos < -10)
+            reset();
+        if (this.yPos < -10)
+            this.yPos = 1080;
+        if (yPos > 1090)
+            this.yPos = 0;
+    }
+
+    public static void createStar(int nbrOfStars) throws SlickException {
+        for (int n = 0; n < nbrOfStars; n++) {
+            Image star;
+
+            if (n % 2 > 0) star = new Image("star1.png");
+            else star = new Image("star2.png");
+
+            stars.add(new Star(star));
+        }
+    }
+
+    public static void renderStars() {
+        for (Star s : stars) {
+            s.draw();
+        }
+    }
+
+    public static void updateStars() {
+        for (Star s : stars) {
+            s.update();
+        }
+    }
+
+    public static void move(double x, double y) {
+        for (Star s : stars) {
+            s.xPos += s.speed * x;
+            s.yPos += s.speed * y;
+        }
+    }
 }
