@@ -28,7 +28,7 @@ public class Fire {
         this.creationDone = false;
         this.rotationFactor = 0;
         //this.rotationFactor = rng.nextInt(4)-2;
-        this.yspeed = (rng.nextFloat()*10f) - 5f;
+        //this.yspeed = (rng.nextFloat()*10f) - 5f;
     }
 
     public static void renderFire() {
@@ -63,7 +63,7 @@ public class Fire {
 
         xPos += speed;
         yPos += yspeed * speed / 10;
-        rotationFactor = yspeed / 6f;
+        //rotationFactor = yspeed / 6f;
     }
 
     public void draw() {
