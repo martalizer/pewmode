@@ -13,12 +13,14 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 public class PewMode extends BasicGame {
-    public float shipXpos, shipYpos, scale, fade;
+    public float fade;
     public int countdown, timer;
-    Image superStarshipDeluxe, pewmodetitle, pressanykey, flame, flameAB;
+    Image pewmodetitle, pressanykey, flame, flameAB;
+    static final int screenHeight = 1200;
+    Sprites sprites;
     boolean menumode = true;
     float scalemodifier = 1;
-    Input in = new Input(1080);
+    Input in = new Input(screenHeight);
     int shipMaxSpeed = 8;
     private long lastShotFired;
 
@@ -30,10 +32,10 @@ public class PewMode extends BasicGame {
     public void keyPressed(int key, char c) {
         if (menumode) {
             menumode = false;
-            superStarshipDeluxe.setAlpha(1);
-            scale = 0.3f;
-            shipXpos = 200;
-            shipYpos = 400;
+            sprites.ship.setAlpha(1);
+            sprites.ship.setScale(0.3f);
+            sprites.ship.setxPos(200);
+            sprites.ship.setyPos(400);
             super.keyPressed(key, c);
         }
     }
@@ -41,22 +43,20 @@ public class PewMode extends BasicGame {
     @Override
     public void init(GameContainer gc) throws SlickException {
         myInit();
-        Star.createStar(400);
         Mouse.setGrabbed(true);
     }
 
     private void myInit() throws SlickException {
-        shipXpos = 10;
-        shipYpos = 10;
+        sprites = new Sprites(shipMaxSpeed);
+        sprites.init();
+
         countdown = 30;
         fade = 0;
-        superStarshipDeluxe = new Image("ship.png");
         pewmodetitle = new Image("title.png");
         pressanykey = new Image("anykey.png");
         flameAB = new Image("flame.png");
         flameAB.setRotation(90);
         flame = new Image("flame.png");
-        superStarshipDeluxe.setAlpha(0);
         flame.setAlpha(0);
         pewmodetitle.setAlpha(0);
         pressanykey.setAlpha(0);
@@ -72,56 +72,37 @@ public class PewMode extends BasicGame {
     }
 
     private void updateGame() throws SlickException {
-        Star.updateStars();
-        Fire.updateFires();
+        sprites.update();
+
         scalemodifier = (float) (1 + Math.sin(System.nanoTime()) / 10);
 
         if (flame.getAlpha() > 0f)
             setFlameAlpha(0f);
         else
             setFlameAlpha(0.8f);
+
         updateMovement();
     }
 
     private void updateMovement() throws SlickException {
         if (in.isKeyDown(Input.KEY_S)) {
-            down();
+            sprites.down();
         }
         if (in.isKeyDown(Input.KEY_W)) {
-            up();
+            sprites.up();
         }
         if (in.isKeyDown(Input.KEY_A)) {
-            left();
+            sprites.left();
         }
         if (in.isKeyDown(Input.KEY_D)) {
-            right();
+            sprites.right();
         }
         if (in.isKeyDown(Input.KEY_SPACE)) {
             if (System.currentTimeMillis() > lastShotFired + 50) {
-                Fire.initFire(shipXpos, shipYpos);
+                sprites.fires.fire(sprites.ship.getxPos(), sprites.ship.getyPos());
                 lastShotFired = System.currentTimeMillis();
             }
         }
-    }
-
-    private void down() {
-        this.shipYpos += shipMaxSpeed;
-        Star.move(0, -0.5);
-    }
-
-    private void up() {
-        this.shipYpos -= shipMaxSpeed;
-        Star.move(0, 0.5);
-    }
-
-    private void left() {
-        this.shipXpos -= shipMaxSpeed;
-        Star.move(0.5, 0);
-    }
-
-    private void right() {
-        this.shipXpos += shipMaxSpeed;
-        Star.move(-0.5, 0);
     }
 
     private void setFlameAlpha(float a) {
@@ -138,20 +119,16 @@ public class PewMode extends BasicGame {
     }
 
     private void renderGame() {
-        Star.renderStars();
-        Fire.renderFire();
+        sprites.render();
 
-        superStarshipDeluxe.draw(shipXpos, shipYpos, scale);
-
-        renderFlameGroup(190);
+        renderFlameGroup(190);  // The flames not below the ship?
         renderFlameGroup(300);  // The flames below the ship
         renderAfterBurner();
     }
 
     private void renderMenu() {
-        Star.renderStars();
-        Fire.renderFire();
-        superStarshipDeluxe.draw(shipXpos, shipYpos, scale);
+        sprites.render();
+
         renderFlameGroup(247);
         renderFlameGroup(357);
         pressanykey.draw(500, 500, 1);
@@ -159,8 +136,8 @@ public class PewMode extends BasicGame {
     }
 
     private void renderAfterBurner() {
-        flameAB.draw(shipXpos - 150 * scale - ((scale * scalemodifier - 2) * 10),
-                shipYpos - 70 - ((scale * scalemodifier - 2) * 60), scale * 5 * scalemodifier);
+        flameAB.draw(sprites.ship.getxPos() - 150 * sprites.ship.getScale() - ((sprites.ship.getScale() * scalemodifier - 2) * 10),
+                sprites.ship.getyPos() - 70 - ((sprites.ship.getScale() * scalemodifier - 2) * 60), sprites.ship.getScale() * 5 * scalemodifier);
     }
 
     private void renderFlameGroup(int offset) {
@@ -170,20 +147,21 @@ public class PewMode extends BasicGame {
     }
 
     private void renderFlame(float xOffset) {
-        flame.draw(shipXpos + xOffset * scale - ((scale * scalemodifier - 2) * 10),
-                shipYpos + 250 * scale, scale * scalemodifier);
+        flame.draw(sprites.ship.getxPos() + xOffset * sprites.ship.getScale() - ((sprites.ship.getScale() * scalemodifier - 2) * 10),
+                sprites.ship.getyPos() + 250 * sprites.ship.getScale(), sprites.ship.getScale() * scalemodifier);
     }
 
     private void introAndMenu() {
-        Star.updateStars();
+        sprites.update();
 
         scalemodifier = (float) (1 + Math.sin(System.nanoTime()) / 10);
 
-        superStarshipDeluxe.setAlpha((float) (superStarshipDeluxe.getAlpha() + 0.004));
+        sprites.ship.setAlpha(sprites.ship.getAlpha() + 0.004f);
 
-        if (superStarshipDeluxe.getAlpha() < 1f) {
-            scale = shipXpos * shipYpos / 60000.00f;
-            shipXpos += 2;
+        if (sprites.ship.getAlpha() < 1f) {
+            sprites.ship.setScale(sprites.ship.getxPos() * sprites.ship.getyPos() / 60000.00f);
+            sprites.ship.blindMove(2, 0);
+
         } else {
             if (flame.getAlpha() > 0f)
                 setFlameAlpha(0f);
@@ -191,8 +169,8 @@ public class PewMode extends BasicGame {
                 setFlameAlpha(0.8f);
         }
 
-        if (570 + shipYpos < 1080) {
-            shipYpos += 0.9f;
+        if (570 + sprites.ship.getyPos() < screenHeight) {
+            sprites.ship.blindMove(0, 0.9f);
         } else {
             pewmodetitle.setAlpha((pewmodetitle.getAlpha() + 0.05f));
         }
@@ -213,8 +191,8 @@ public class PewMode extends BasicGame {
         try {
             AppGameContainer appgc;
             appgc = new AppGameContainer(new PewMode("PewMode!"));
-            appgc.setDisplayMode(1920, 1080, false);
-            //appgc.setFullscreen(true);
+            appgc.setDisplayMode(1920, screenHeight, false);
+            appgc.setFullscreen(true);
             appgc.setShowFPS(false);
             appgc.setTargetFrameRate(60);
             appgc.setVSync(true);
