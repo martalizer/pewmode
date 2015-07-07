@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Stars {
-    List<Star> stars = new ArrayList<>();
+    List<Spritable> stars = new ArrayList<>();
 
     public void addStar(int nbrOfStars, int screenHeight) throws SlickException {
         for (int n = 0; n < nbrOfStars; n++) {
@@ -21,21 +21,21 @@ public class Stars {
     }
 
     public void render() {
-        for (Star s : stars) {
+        for (Spritable s : stars) {
             s.render();
         }
     }
 
     public void update() {
-        for (Star s : stars) {
+        for (Spritable s : stars) {
             s.update();
         }
     }
 
-    public void move(double x, double y) {
-        for (Star s : stars) {
-            s.xPos += s.speed * x;
-            s.yPos += s.speed * y;
+    public void move(float x, float y) {
+        for (Spritable s : stars) {
+            s.setyPos(s.getyPos() + s.getSpeed() * y);
+            s.setxPos(s.getxPos() + s.getSpeed() * x);
         }
     }
 }

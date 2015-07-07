@@ -3,7 +3,6 @@ package pewmode;
 import org.newdawn.slick.Image;
 
 public class Star extends Sprite {
-    float speed;
     int screenHeight;
 
     public Star(Image image, int screenHeight) {

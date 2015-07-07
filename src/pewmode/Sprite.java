@@ -10,6 +10,7 @@ public class Sprite implements Spritable {
     float yPos;
     float xSpeed;
     float ySpeed;
+    float speed;
 
     public float getxPos() {
         return xPos;
@@ -41,6 +42,16 @@ public class Sprite implements Spritable {
 
     public void setySpeed(float ySpeed) {
         this.ySpeed = ySpeed;
+    }
+
+    @Override
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    @Override
+    public float getSpeed() {
+        return speed;
     }
 
     public float getAlpha() {

@@ -17,6 +17,10 @@ package pewmode;
 
      void setySpeed(float ySpeed);
 
+     void setSpeed(float speed);
+
+     float getSpeed();
+
      void update();
 
      void render();

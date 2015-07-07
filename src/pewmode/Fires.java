@@ -6,21 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Fires {
-    List<Fire> fires = new ArrayList<>();
+    List<Spritable> fires = new ArrayList<>();
 
     public void render() {
-        for (Fire f : fires) {
+        for (Spritable f : fires) {
             f.render();
         }
     }
 
     public void update() {
-        for (Fire f : fires) {
+        for (Spritable f : fires) {
             f.update();
         }
     }
 
-    public void fire(float x, float y) throws SlickException {
-        fires.add(new Fire(x, y));
+    public void fire(Spritable s) throws SlickException {
+        fires.add(s);
     }
 }

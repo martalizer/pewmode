@@ -42,11 +42,7 @@ public class PewMode extends BasicGame {
 
     @Override
     public void init(GameContainer gc) throws SlickException {
-        myInit();
         Mouse.setGrabbed(true);
-    }
-
-    private void myInit() throws SlickException {
         sprites = new Sprites(shipMaxSpeed);
         sprites.init();
 
@@ -99,7 +95,7 @@ public class PewMode extends BasicGame {
         }
         if (in.isKeyDown(Input.KEY_SPACE)) {
             if (System.currentTimeMillis() > lastShotFired + 50) {
-                sprites.fires.fire(sprites.ship.getxPos(), sprites.ship.getyPos());
+                sprites.fires.fire(new Fire(sprites.ship.getxPos(), sprites.ship.getyPos()));
                 lastShotFired = System.currentTimeMillis();
             }
         }
