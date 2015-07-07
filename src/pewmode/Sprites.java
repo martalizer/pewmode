@@ -6,8 +6,6 @@ public class Sprites {
     public Ship ship;
     public Stars stars;
     public Fires fires;
-    public Flames flames_in_menu;
-    public Flames flames;
     public int shipMaxSpeed;
 
     public Sprites(int maxspeed) throws SlickException {
@@ -15,13 +13,11 @@ public class Sprites {
         this.ship = new Ship();
         this.fires = new Fires();
         this.stars = new Stars();
-        this.flames = new Flames();
     }
 
     public void update () {
         stars.update();
         fires.update();
-        flames.update();
     }
 
     public void init() throws SlickException {
@@ -55,6 +51,5 @@ public class Sprites {
         stars.render();
         fires.render();
         ship.render();
-        flames.render();
     }
 }
