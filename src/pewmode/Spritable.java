@@ -30,4 +30,9 @@ package pewmode;
      void move(float x, float y);
 
      void blindMove(float x, float y);
-}
+
+     void setAlpha(float i);
+
+     void setScale(float v);
+
+ }

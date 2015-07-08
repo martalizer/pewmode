@@ -6,8 +6,12 @@ import org.newdawn.slick.SlickException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stars {
+public class Stars extends Sprite {
     List<Spritable> stars = new ArrayList<>();
+
+    public Stars(int i, int i1) throws SlickException {
+        addStar(i, i1);
+    }
 
     public void addStar(int nbrOfStars, int screenHeight) throws SlickException {
         for (int n = 0; n < nbrOfStars; n++) {

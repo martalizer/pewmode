@@ -2,54 +2,74 @@ package pewmode;
 
 import org.newdawn.slick.SlickException;
 
+import java.util.ArrayList;
+
 public class Sprites {
-    public Ship ship;
-    public Stars stars;
-    public Fires fires;
+    public ArrayList<Spritable> sprites = new ArrayList<>();;
     public int shipMaxSpeed;
+    private long lastShotFired = 0;
 
     public Sprites(int maxspeed) throws SlickException {
         shipMaxSpeed = maxspeed;
-        this.ship = new Ship();
-        this.fires = new Fires();
-        this.stars = new Stars();
+
+        sprites.add(new Stars(400, 1200));
+        sprites.add(new Ship());
+        sprites.add(new Fires());
     }
 
     public void update () {
-        stars.update();
-        fires.update();
+        for (Spritable s : sprites) {
+            s.update();
+        }
     }
 
     public void init() throws SlickException {
-        stars.addStar(400, 1200);
-        ship.setxPos(10);
-        ship.setxPos(10);
-        ship.setAlpha(0);
+        sprites.get(1).setxPos(10);
+        sprites.get(1).setAlpha(0);
     }
 
     public void down() {
-        ship.move(0, shipMaxSpeed);
-        stars.move(0, -0.5f);
+        sprites.get(1).move(0, shipMaxSpeed);
+        sprites.get(0).move(0, 0.5f);
     }
 
     public void up() {
-        ship.move(0, -shipMaxSpeed);
-        stars.move(0, 0.5f);
+        sprites.get(1).move(0, -shipMaxSpeed);
+        sprites.get(0).move(0, 0.5f);
     }
 
     public void left() {
-        ship.move(-shipMaxSpeed, 0);
-        stars.move(0.5f, 0);
+        sprites.get(1).move(-shipMaxSpeed, 0);
+        sprites.get(0).move(0.5f, 0);
     }
 
     public void right() {
-        ship.move(shipMaxSpeed, 0);
-        stars.move(-0.5f, 0);
+        sprites.get(1).move(shipMaxSpeed, 0);
+        sprites.get(0).move(-0.5f, 0);
     }
 
     public void render() {
-        stars.render();
-        fires.render();
-        ship.render();
+        for (Spritable s : sprites) {
+            s.render();
+        }
+    }
+
+    public Ship getShip() {
+        return (Ship) sprites.get(1);
+    }
+
+    public Spritable get(int i) {
+        return sprites.get(i);
+    }
+
+    public Fires getWeapon() {
+        return (Fires) sprites.get(2);
+    }
+
+    public void fireWeapon() throws SlickException {
+        if (System.currentTimeMillis() > lastShotFired + 50) {
+            getWeapon().fire(new Fire(getShip().getxPos(), getShip().getyPos()));
+            lastShotFired = System.currentTimeMillis();
+        }
     }
 }

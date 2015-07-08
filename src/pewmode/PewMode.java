@@ -4,13 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.lwjgl.input.Mouse;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 public class PewMode extends BasicGame {
     public float fade;
@@ -22,7 +16,6 @@ public class PewMode extends BasicGame {
     float scalemodifier = 1;
     Input in = new Input(screenHeight);
     int shipMaxSpeed = 8;
-    private long lastShotFired;
 
     public PewMode(String gamename) {
         super(gamename);
@@ -32,10 +25,10 @@ public class PewMode extends BasicGame {
     public void keyPressed(int key, char c) {
         if (menumode) {
             menumode = false;
-            sprites.ship.setAlpha(1);
-            sprites.ship.setScale(0.3f);
-            sprites.ship.setxPos(200);
-            sprites.ship.setyPos(400);
+            sprites.getShip().setAlpha(1);
+            sprites.getShip().setScale(0.3f);
+            sprites.getShip().setxPos(200);
+            sprites.getShip().setyPos(400);
             super.keyPressed(key, c);
         }
     }
@@ -72,10 +65,7 @@ public class PewMode extends BasicGame {
 
         scalemodifier = (float) (1 + Math.sin(System.nanoTime()) / 10);
 
-        if (flame.getAlpha() > 0f)
-            setFlameAlpha(0f);
-        else
-            setFlameAlpha(0.8f);
+        toggleFlameAlpha();
 
         updateMovement();
     }
@@ -94,16 +84,8 @@ public class PewMode extends BasicGame {
             sprites.right();
         }
         if (in.isKeyDown(Input.KEY_SPACE)) {
-            if (System.currentTimeMillis() > lastShotFired + 50) {
-                sprites.fires.fire(new Fire(sprites.ship.getxPos(), sprites.ship.getyPos()));
-                lastShotFired = System.currentTimeMillis();
-            }
+            sprites.fireWeapon();
         }
-    }
-
-    private void setFlameAlpha(float a) {
-        flame.setAlpha(a);
-        flameAB.setAlpha(a);
     }
 
     @Override
@@ -132,8 +114,12 @@ public class PewMode extends BasicGame {
     }
 
     private void renderAfterBurner() {
-        flameAB.draw(sprites.ship.getxPos() - 150 * sprites.ship.getScale() - ((sprites.ship.getScale() * scalemodifier - 2) * 10),
-                sprites.ship.getyPos() - 70 - ((sprites.ship.getScale() * scalemodifier - 2) * 60), sprites.ship.getScale() * 5 * scalemodifier);
+        float scale = sprites.getShip().getScale();
+        float xPos = sprites.getShip().getxPos();
+        float yPos = sprites.getShip().getyPos();
+
+        flameAB.draw(xPos - 150 * scale - ((scale * scalemodifier - 2) * 10),
+                yPos - 70 - ((scale * scalemodifier - 2) * 60), scale * 5 * scalemodifier);
     }
 
     private void renderFlameGroup(int offset) {
@@ -143,8 +129,12 @@ public class PewMode extends BasicGame {
     }
 
     private void renderFlame(float xOffset) {
-        flame.draw(sprites.ship.getxPos() + xOffset * sprites.ship.getScale() - ((sprites.ship.getScale() * scalemodifier - 2) * 10),
-                sprites.ship.getyPos() + 250 * sprites.ship.getScale(), sprites.ship.getScale() * scalemodifier);
+        float scale = sprites.getShip().getScale();
+        float xPos = sprites.getShip().getxPos();
+        float yPos = sprites.getShip().getyPos();
+
+        flame.draw(xPos + xOffset * scale - ((scale * scalemodifier - 2) * 10),
+                yPos + 250 * scale, scale * scalemodifier);
     }
 
     private void introAndMenu() {
@@ -152,21 +142,18 @@ public class PewMode extends BasicGame {
 
         scalemodifier = (float) (1 + Math.sin(System.nanoTime()) / 10);
 
-        sprites.ship.setAlpha(sprites.ship.getAlpha() + 0.004f);
+        sprites.getShip().setAlpha(sprites.getShip().getAlpha() + 0.004f);
 
-        if (sprites.ship.getAlpha() < 1f) {
-            sprites.ship.setScale(sprites.ship.getxPos() * sprites.ship.getyPos() / 60000.00f);
-            sprites.ship.blindMove(2, 0);
+        if (sprites.getShip().getAlpha() < 1f) {
+            sprites.getShip().setScale(sprites.getShip().getxPos() * sprites.getShip().getyPos() / 60000.00f);
+            sprites.getShip().blindMove(2, 0);
 
         } else {
-            if (flame.getAlpha() > 0f)
-                setFlameAlpha(0f);
-            else
-                setFlameAlpha(0.8f);
+            toggleFlameAlpha();
         }
 
-        if (570 + sprites.ship.getyPos() < screenHeight) {
-            sprites.ship.blindMove(0, 0.9f);
+        if (570 + sprites.getShip().getyPos() < screenHeight) {
+            sprites.getShip().blindMove(0, 0.9f);
         } else {
             pewmodetitle.setAlpha((pewmodetitle.getAlpha() + 0.05f));
         }
@@ -183,16 +170,33 @@ public class PewMode extends BasicGame {
         }
     }
 
+    private void toggleFlameAlpha() {
+        if (flame.getAlpha() > 0f)
+            setFlameAlpha(0f);
+        else
+            setFlameAlpha(0.8f);
+    }
+
+    private void setFlameAlpha(float a) {
+        flame.setAlpha(a);
+        flameAB.setAlpha(a);
+    }
+
+
     public static void main(String[] args) {
         try {
             AppGameContainer appgc;
-            appgc = new AppGameContainer(new PewMode("PewMode!"));
-            appgc.setDisplayMode(1920, screenHeight, false);
-            appgc.setFullscreen(true);
+            PewMode pm = new PewMode("PewMode!");
+            ScalableGame sg = new ScalableGame(pm, 1920, 1200, true);
+
+            appgc = new AppGameContainer(sg);
+            appgc.setDisplayMode(appgc.getScreenWidth(), appgc.getScreenHeight(), true);
+
             appgc.setShowFPS(false);
             appgc.setTargetFrameRate(60);
             appgc.setVSync(true);
             appgc.start();
+
         } catch (SlickException ex) {
             Logger.getLogger(PewMode.class.getName()).log(Level.SEVERE, null, ex);
         }

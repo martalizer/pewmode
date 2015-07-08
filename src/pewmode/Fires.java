@@ -5,7 +5,7 @@ import org.newdawn.slick.SlickException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fires {
+public class Fires extends Sprite {
     List<Spritable> fires = new ArrayList<>();
 
     public void render() {
