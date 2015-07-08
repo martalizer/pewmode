@@ -1,5 +1,6 @@
 package pewmode;
 
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import java.util.ArrayList;
@@ -8,15 +9,25 @@ public class Sprites {
     public ArrayList<Spritable> sprites = new ArrayList<>();;
     public int shipMaxSpeed;
     private long lastShotFired = 0;
+    int screenHeight;
+    Input in = new Input(screenHeight);
 
-    public Sprites(int maxspeed) throws SlickException {
+    public Sprites(int maxspeed, int screenHeight) throws SlickException {
         shipMaxSpeed = maxspeed;
-        sprites.add(new Stars(800, 1200));
+        this.screenHeight = screenHeight;
+
+        sprites.add(new Stars(800, screenHeight));
         sprites.add(new Ship());
         sprites.add(new Fires());
+        sprites.add(new Flames(getShip()));
     }
 
     public void update () {
+        try {
+            updateMovement();
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
         for (Spritable s : sprites) {
             s.update();
         }
@@ -70,5 +81,13 @@ public class Sprites {
             getWeapon().fire(new Fire(getShip().getxPos(), getShip().getyPos()));
             lastShotFired = System.currentTimeMillis();
         }
+    }
+
+    private void updateMovement() throws SlickException {
+        if (in.isKeyDown(Input.KEY_S)) { down(); }
+        if (in.isKeyDown(Input.KEY_W)) { up(); }
+        if (in.isKeyDown(Input.KEY_A)) { left(); }
+        if (in.isKeyDown(Input.KEY_D)) { right(); }
+        if (in.isKeyDown(Input.KEY_SPACE)) { fireWeapon(); }
     }
 }

@@ -35,4 +35,5 @@ package pewmode;
 
      void setScale(float v);
 
+     void menu (boolean menu);
  }

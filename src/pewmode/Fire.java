@@ -30,11 +30,9 @@ public class Fire extends Sprite {
         if (!scaling_done && image.getAlpha() < 1) {
             image.setAlpha(image.getAlpha() + 0.2f);
         }
-
         if (scaling_done && xSpeed < targetspeed) {
             xSpeed += targetspeed / 30;
         }
-
         xPos += xSpeed;
     }
 

@@ -7,7 +7,6 @@ import org.newdawn.slick.SlickException;
 public class Ship extends Sprite {
     public Ship() throws SlickException {
         this.image = new Image("ship.png");
-        init();
     }
 
     public void render() {

@@ -11,9 +11,16 @@ public class Sprite implements Spritable {
     float xSpeed;
     float ySpeed;
     float speed;
+    boolean menu;
 
     public float getxPos() {
         return xPos;
+    }
+
+    @Override
+    public void menu(boolean menu) {
+        this.menu = menu;
+
     }
 
     public void setxPos(float xPos) {
