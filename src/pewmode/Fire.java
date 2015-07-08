@@ -9,15 +9,15 @@ public class Fire extends Sprite {
     private static final float TARGET_SCALE = 0.6f;
 
     public Fire(float shipXpos, float shipYpos) throws SlickException {
-        this.image = new Image("fireball.png");
-        this.xPos = shipXpos + 220;
-        this.yPos = shipYpos - 240;
-        this.scale = 0.3f / 10;
-        this.targetspeed = 32;
-        this.xSpeed = this.targetspeed / 4;
-        this.image.rotate(-45);
+        image = new Image("fireball.png");
+        xPos = shipXpos + 220;
+        yPos = shipYpos - 240;
+        scale = 0.3f / 10;
+        targetspeed = 32;
+        xSpeed = targetspeed / 4;
+        image.rotate(-45);
         image.setAlpha(0);
-        this.scaling_done = false;
+        scaling_done = false;
     }
 
     @Override

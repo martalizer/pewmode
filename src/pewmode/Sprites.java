@@ -6,7 +6,7 @@ import org.newdawn.slick.SlickException;
 import java.util.ArrayList;
 
 public class Sprites {
-    public ArrayList<Spritable> sprites = new ArrayList<>();;
+    public ArrayList<Spritable> sprites = new ArrayList<>();
     public int shipMaxSpeed;
     private long lastShotFired = 0;
     int screenHeight;

@@ -15,10 +15,8 @@ public class Stars extends Sprite {
     public void addStar(int nbrOfStars, int screenHeight) throws SlickException {
         for (int n = 0; n < nbrOfStars; n++) {
             Image star;
-
             if (n % 2 > 0) star = new Image("star1.png");
             else star = new Image("star2.png");
-
             stars.add(new Star(star, screenHeight));
         }
     }
