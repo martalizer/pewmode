@@ -30,7 +30,7 @@ public class Sprites {
 
     public void down() {
         sprites.get(1).move(0, shipMaxSpeed);
-        sprites.get(0).move(0, 0.5f);
+        sprites.get(0).move(0, -0.5f);
     }
 
     public void up() {

@@ -55,7 +55,7 @@ public class PewMode extends BasicGame {
     @Override
     public void update(GameContainer gc, int i) throws SlickException {
         if (menumode)
-            introAndMenu();
+            updateIntroAndMenu();
         else
             updateGame();
     }
@@ -66,7 +66,6 @@ public class PewMode extends BasicGame {
         scalemodifier = (float) (1 + Math.sin(System.nanoTime()) / 10);
 
         toggleFlameAlpha();
-
         updateMovement();
     }
 
@@ -99,8 +98,8 @@ public class PewMode extends BasicGame {
     private void renderGame() {
         sprites.render();
 
-        renderFlameGroup(190);  // The flames not below the ship?
-        renderFlameGroup(300);  // The flames below the ship
+        renderFlameGroup(190);
+        renderFlameGroup(300);
         renderAfterBurner();
     }
 
@@ -137,7 +136,7 @@ public class PewMode extends BasicGame {
                 yPos + 250 * scale, scale * scalemodifier);
     }
 
-    private void introAndMenu() {
+    private void updateIntroAndMenu() {
         sprites.update();
 
         scalemodifier = (float) (1 + Math.sin(System.nanoTime()) / 10);
@@ -181,8 +180,7 @@ public class PewMode extends BasicGame {
         flame.setAlpha(a);
         flameAB.setAlpha(a);
     }
-
-
+    
     public static void main(String[] args) {
         try {
             AppGameContainer appgc;

@@ -52,7 +52,7 @@ public class Fire extends Sprite {
     }
 
     public void render() {
-        image.draw(xPos, yPos, scale);
+        if (xPos < 3000) image.draw(xPos, yPos, scale);
     }
 }
 
