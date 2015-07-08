@@ -13,7 +13,7 @@ public class PewMode extends BasicGame {
     static final int screenHeight = 1200;
     Sprites sprites;
     boolean menumode = true;
-    float scalemodifier = 1;
+    float flameScale = 1;
     Input in = new Input(screenHeight);
     int shipMaxSpeed = 8;
 
@@ -54,6 +54,8 @@ public class PewMode extends BasicGame {
 
     @Override
     public void update(GameContainer gc, int i) throws SlickException {
+        flameScale = (float) (1 + Math.sin(System.nanoTime()) / 10);
+
         if (menumode)
             updateIntroAndMenu();
         else
@@ -62,8 +64,6 @@ public class PewMode extends BasicGame {
 
     private void updateGame() throws SlickException {
         sprites.update();
-
-        scalemodifier = (float) (1 + Math.sin(System.nanoTime()) / 10);
 
         toggleFlameAlpha();
         updateMovement();
@@ -117,8 +117,8 @@ public class PewMode extends BasicGame {
         float xPos = sprites.getShip().getxPos();
         float yPos = sprites.getShip().getyPos();
 
-        flameAB.draw(xPos - 150 * scale - ((scale * scalemodifier - 2) * 10),
-                yPos - 70 - ((scale * scalemodifier - 2) * 60), scale * 5 * scalemodifier);
+        flameAB.draw(xPos - 150 * scale - ((scale * flameScale - 2) * 10),
+                yPos - 70 - ((scale * flameScale - 2) * 60), scale * 5 * flameScale);
     }
 
     private void renderFlameGroup(int offset) {
@@ -132,14 +132,12 @@ public class PewMode extends BasicGame {
         float xPos = sprites.getShip().getxPos();
         float yPos = sprites.getShip().getyPos();
 
-        flame.draw(xPos + xOffset * scale - ((scale * scalemodifier - 2) * 10),
-                yPos + 250 * scale, scale * scalemodifier);
+        flame.draw(xPos + xOffset * scale - ((scale * flameScale - 2) * 10),
+                yPos + 250 * scale, scale * flameScale);
     }
 
     private void updateIntroAndMenu() {
         sprites.update();
-
-        scalemodifier = (float) (1 + Math.sin(System.nanoTime()) / 10);
 
         sprites.getShip().setAlpha(sprites.getShip().getAlpha() + 0.004f);
 
@@ -148,7 +146,7 @@ public class PewMode extends BasicGame {
             sprites.getShip().blindMove(2, 0);
 
         } else {
-            toggleFlameAlpha();
+            toggleFlameAlpha(); // Will remain 0 until ship is fully visible
         }
 
         if (570 + sprites.getShip().getyPos() < screenHeight) {
@@ -180,7 +178,7 @@ public class PewMode extends BasicGame {
         flame.setAlpha(a);
         flameAB.setAlpha(a);
     }
-    
+
     public static void main(String[] args) {
         try {
             AppGameContainer appgc;

@@ -11,8 +11,7 @@ public class Sprites {
 
     public Sprites(int maxspeed) throws SlickException {
         shipMaxSpeed = maxspeed;
-
-        sprites.add(new Stars(400, 1200));
+        sprites.add(new Stars(800, 1200));
         sprites.add(new Ship());
         sprites.add(new Fires());
     }
