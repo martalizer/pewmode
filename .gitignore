@@ -1,4 +1,7 @@
 old
 .DS_Store
 bin
-.idea*
+.idea/
+.project
+.classpath
+pewmode.iml
