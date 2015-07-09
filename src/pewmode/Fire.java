@@ -13,7 +13,7 @@ public class Fire extends Sprite {
         xPos = shipXpos + 220;
         yPos = shipYpos - 240;
         scale = 0.3f / 10;
-        targetspeed = 32;
+        targetspeed = 32 * 2;
         xSpeed = targetspeed / 4;
         image.rotate(-45);
         image.setAlpha(0);

@@ -2,9 +2,6 @@ package pewmode;
 
 import org.newdawn.slick.Image;
 
-/**
- * Created by mart on 08/07/15.
- */
 public class Flame extends Sprite {
     float flameScale = 1;
     Ship ship;

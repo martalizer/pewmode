@@ -4,6 +4,7 @@ import org.newdawn.slick.Image;
 
 public class Star extends Sprite {
     int screenHeight;
+    static int speedmodifier = 4;
 
     public Star(Image image, int screenHeight) {
         this.screenHeight = screenHeight;
@@ -15,8 +16,8 @@ public class Star extends Sprite {
     public void init() {
         this.yPos = (float) (Math.random() * screenHeight);
         this.xPos = -10 + (float) (Math.random() * 2010);
-        this.speed = 2 + (float) (Math.random()) * 2;
-        this.scale = this.speed / 4;
+        this.speed = 2 + (float) (Math.random()) * 2 * speedmodifier;
+        this.scale = this.speed / (4 * speedmodifier);
     }
 
     private void reset() {
