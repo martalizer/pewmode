@@ -1,19 +1,17 @@
 package pewmode;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 
 public class PewMode extends BasicGame {
-    public float fade = 0;
-    public int countdown = 30;
+    static final int SCREEN_HEIGHT = 1200,
+                     SHIP_MAX_SPEED = 12;
+
+    int countdown = 30;
+    public float _fade = 0;
     Image pewmodetitle, pressanykey;
-    static final int screenHeight = 1200;
     Sprites sprites;
     boolean menumode = true;
-    int shipMaxSpeed = 12;
 
     public PewMode(String gamename) {
         super(gamename);
@@ -22,7 +20,7 @@ public class PewMode extends BasicGame {
     @Override
     public void init(GameContainer gc) throws SlickException {
         Mouse.setGrabbed(true);
-        sprites = new Sprites(shipMaxSpeed, screenHeight);
+        sprites = new Sprites(SHIP_MAX_SPEED, SCREEN_HEIGHT);
         sprites.init();
         pewmodetitle = new Image("title.png");
         pewmodetitle.setAlpha(0);
@@ -52,23 +50,18 @@ public class PewMode extends BasicGame {
 
     @Override
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        if (menumode)
-            renderMenu();
-        else
-            renderGame();
-    }
-
-    private void renderGame() {
-        sprites.get(3).menu(false);
-        sprites.render();
-    }
-
-    private void renderMenu() {
-        sprites.get(3).menu(true);
+        if (menumode) {
+            sprites.get(3).menu(true);     //enable rear flames
+        }
+        else {
+            sprites.get(3).menu(false);    //disable rear flames
+        }
         sprites.render();
 
-        pressanykey.draw(500, 500, 1);
-        pewmodetitle.draw(60, 100, 4.3f);
+        if(menumode) {
+            pressanykey.draw(500, 500, 1);
+            pewmodetitle.draw(60, 100, 4.3f);
+        }
     }
 
     private void updateIntroAndMenu() {
@@ -79,7 +72,7 @@ public class PewMode extends BasicGame {
             sprites.getShip().blindMove(2, 0);
 
         }
-        if (570 + sprites.getShip().getyPos() < screenHeight) {
+        if (570 + sprites.getShip().getyPos() < SCREEN_HEIGHT) {
             sprites.getShip().blindMove(0, 0.9f);
         } else {
             pewmodetitle.setAlpha((pewmodetitle.getAlpha() + 0.05f));
@@ -89,9 +82,9 @@ public class PewMode extends BasicGame {
                 countdown--;
             else {
                 float sinblinkthing = Math.abs((float) Math.sin(System.nanoTime() / (10e7) * 0.7));
-                pressanykey.setAlpha(sinblinkthing * fade);
-                if (fade < 1)
-                    fade += 0.1f;
+                pressanykey.setAlpha(sinblinkthing * _fade);
+                if (_fade < 1)
+                    _fade += 0.1f;
             }
         }
     }
@@ -102,14 +95,12 @@ public class PewMode extends BasicGame {
             PewMode pm = new PewMode("PewMode!");
             ScalableGame sg = new ScalableGame(pm, 1920, 1200, true);
             appgc = new AppGameContainer(sg);
+            //appgc.setDisplayMode(2880, 1800, true);
             appgc.setDisplayMode(appgc.getScreenWidth(), appgc.getScreenHeight(), true);
             appgc.setShowFPS(false);
             appgc.setTargetFrameRate(60);
             appgc.setVSync(true);
             appgc.start();
-
-        } catch (SlickException ex) {
-            Logger.getLogger(PewMode.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (SlickException ex) {throw new RuntimeException(ex);}
     }
 }

@@ -4,14 +4,10 @@ import org.newdawn.slick.Image;
 
 public class Sprite implements Spritable {
     protected Image image;
-
-    float scale;
-    float xPos;
-    float yPos;
-    float xSpeed;
-    float ySpeed;
-    float speed;
     boolean menu;
+    float scale , speed,
+          xPos  , yPos,
+          xSpeed, ySpeed;
 
     public float getxPos() {
         return xPos;
@@ -20,7 +16,6 @@ public class Sprite implements Spritable {
     @Override
     public void menu(boolean menu) {
         this.menu = menu;
-
     }
 
     public void setxPos(float xPos) {
