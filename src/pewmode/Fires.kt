@@ -12,14 +12,14 @@ class Fires : Sprite() {
     override fun update() {
         fires.forEach { it.update() }
 
-//        if (fires.size > 1000) {
-//            var temp : MutableList<Spritable> = ArrayList()
-//            fires.forEach { if(it.getxPos() < 3000) temp.add(it) }
-//            fires = temp
-//        }
+        if (fires.size > 100) {
+            var temp : MutableList<Spritable> = ArrayList()
+            fires.forEach { if(it.getxPos() < 3000) temp.add(it) }
+            fires = temp
+        }
     }
 
-    fun fire(s: Spritable) {
+    internal fun fire(s: Spritable) {
         fires.add(s)
     }
 }

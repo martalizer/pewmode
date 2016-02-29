@@ -54,14 +54,13 @@ constructor(var shipMaxSpeed: Int, internal var screenHeight: Int) {
     val ship: Ship
         get() = sprites[1] as Ship
 
-    operator fun get(i: Int): Spritable {
+    internal operator fun get(i: Int): Spritable {
         return sprites[i]
     }
 
     val weapon: Fires
         get() = sprites[2] as Fires
 
-    @Throws(SlickException::class)
     fun fireWeapon() {
         if (System.currentTimeMillis() > lastShotFired + 50) {
             weapon.fire(Fire(ship.getxPos(), ship.getyPos()))
@@ -69,7 +68,6 @@ constructor(var shipMaxSpeed: Int, internal var screenHeight: Int) {
         }
     }
 
-    @Throws(SlickException::class)
     private fun updateInputMovement() {
         if (`in`.isKeyDown(Input.KEY_S)) down()
         if (`in`.isKeyDown(Input.KEY_W)) up()
