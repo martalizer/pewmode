@@ -15,11 +15,43 @@ constructor(var shipMaxSpeed: Int, internal var screenHeight: Int) {
         sprites.add(Ship())
         sprites.add(Fires())
         sprites.add(Flames(ship))
+        for(i in 1..10)
+            sprites.add(Enemy(2000 + 100 * i.toFloat()))
     }
 
     fun update() {
         updateInputMovement()
         sprites.forEach { it.update() }
+
+        handleCollisions()
+        removeDead()
+    }
+
+    private fun handleCollisions() {
+        val entities = sprites.filterIsInstance<Sprite>().flatMap {
+            if (it is SpriteGroup)
+                it.members()
+            else
+                listOf(it)
+        }
+        // Naïve O(n^2) collision detection. Use segmentation?
+        entities .forEach { that ->
+            entities .forEach {
+                if(it is Enemy && that is Fire)
+                if (it.intersects(that)) {
+                    it.collision(that)
+                }
+            }
+        }
+    }
+
+    private fun removeDead() {
+        sprites.forEach {
+            if (it is SpriteGroup) {
+                it.members().removeAll { it.dead }
+            }
+        }
+        sprites.removeAll { it.dead }
     }
 
     fun render() {

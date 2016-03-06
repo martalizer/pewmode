@@ -1,8 +1,10 @@
 package pewmode
 
+import org.lwjgl.util.Rectangle
 import org.newdawn.slick.Image
 
 open class Sprite : Spritable {
+    override var dead: Boolean = false
     protected lateinit var image: Image
 
     internal var scale: Float = 0.toFloat()
@@ -85,5 +87,24 @@ open class Sprite : Spritable {
     override fun blindMove(x: Float, y: Float) {
         xPos += x
         yPos += y
+    }
+
+    open fun collision(other: Sprite) {
+    }
+
+    fun intersects(b: Sprite): Boolean {
+        val ra = Rectangle(
+                xPos.toInt(),
+                yPos.toInt(),
+                image.width,
+                image.height
+        )
+        val rb = Rectangle(
+                b.xPos.toInt(),
+                b.yPos.toInt(),
+                b.image.width,
+                b.image.height
+        )
+        return ra.intersects(rb)
     }
 }
