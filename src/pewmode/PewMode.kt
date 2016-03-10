@@ -2,7 +2,6 @@ package pewmode
 
 import org.lwjgl.input.Mouse
 import org.newdawn.slick.*
-import org.newdawn.slick.util.Log
 import java.util.*
 
 class PewMode(gamename: String) : BasicGame(gamename) {
@@ -101,13 +100,14 @@ class PewMode(gamename: String) : BasicGame(gamename) {
         }
     }
 
-    companion  object {
+    companion object {
         @JvmStatic fun main(args: Array<String>) {
             val appgc: AppGameContainer
             val pm = PewMode("PewMode!")
             val sg = ScalableGame(pm, 1920, pm.screenHeight, true)
             appgc = AppGameContainer(sg)
             appgc.setDisplayMode(appgc.screenWidth, appgc.screenHeight, true)
+//            appgc.isFullscreen = false;
             appgc.setShowFPS(false)
             appgc.setTargetFrameRate(60)
             appgc.setVSync(true)

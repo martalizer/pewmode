@@ -6,8 +6,8 @@ import org.newdawn.slick.SlickException
 import java.util.ArrayList
 
 class Flames @Throws(SlickException::class)
-internal constructor(ship: Ship) : Sprite() {
-    internal var flames: MutableList<Spritable> = ArrayList()
+internal constructor(ship: Ship) : SpriteGroup() {
+    internal var flames: MutableList<Sprite> = ArrayList()
 
     init {
         val rotated = Image("flame.png")

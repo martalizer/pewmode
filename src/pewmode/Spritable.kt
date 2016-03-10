@@ -1,6 +1,8 @@
 package pewmode
 
-internal interface Spritable {
+interface Spritable {
+    var dead: Boolean
+
     fun getxPos(): Float
 
     fun setxPos(xPos: Float)
